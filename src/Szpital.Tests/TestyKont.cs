@@ -1,6 +1,11 @@
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Szpital.Database;
 using Szpital.Models;
@@ -10,8 +15,62 @@ using Xunit;
 
 namespace Szpital.Tests
 {
-    public class TestyKont
+    public class TestyKont : IClassFixture<CustomWebApplicationFactory<FakeStartup>>
     {
+         private readonly CustomWebApplicationFactory<FakeStartup> _factory;
+
+        public TestyKont(CustomWebApplicationFactory<FakeStartup> factory)
+        {
+            _factory = factory;
+        }
+
+        [Theory]
+        [InlineData("/")]
+        [InlineData("/Register")]
+        [InlineData("/SignIn")]
+        public async Task test_integracyjny_czy_strony_zwracaja_tresc(string url)
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            // Act
+            var response = await client.GetAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
+        }
+
+        [Fact]
+        public async Task test_integracyjny_tworzenia_uzytkownika()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            var csrf = await client.GetAsync("/Register");
+            var content = await csrf.Content.ReadAsStringAsync();
+
+            var start = "type=\"hidden\" value=\"";
+            var indexOfStart = content.IndexOf(start) + start.Length;
+            var indexOfEnd = content.IndexOf("\"", indexOfStart);
+
+            var token = content.Substring(indexOfStart, indexOfEnd - indexOfStart);
+
+            // Act
+            var formContent = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Email", "test@localhost"),
+                new KeyValuePair<string, string>("Password", "12345"),
+                new KeyValuePair<string, string>("UserName", "tes5"),
+                new KeyValuePair<string, string>("__RequestVerificationToken", token),
+            });
+
+            var response = await client.PostAsync("/Register", formContent);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+        }
+
         [Fact]
         public async Task Da_sie_utworzyc_uzytkownika()
         {
