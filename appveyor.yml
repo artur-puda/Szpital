@@ -1,4 +1,5 @@
 build_script:
-    - cd src
+    - cd src/Szpital/
     - dotnet build
+    - cd ../Szpital.Tests/
     - dotnet test
