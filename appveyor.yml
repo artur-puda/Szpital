@@ -1,0 +1,4 @@
+build_script:
+    - cd src
+    - dotnet build
+    - dotnet test
