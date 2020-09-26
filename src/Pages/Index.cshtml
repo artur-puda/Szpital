@@ -1,0 +1,27 @@
+﻿@page "/Index"
+@model Szpital.Pages.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@foreach (var wizyta in Model.Wizyty)
+{
+    <div class="wizyta">
+        <b>Wizyta na godzine: @wizyta.Data</b>
+        <br />
+        <b>Nazwa Pacjenta: @wizyta.Pacjent.UserName</b>
+        <br />
+        <b>Nazwa Doktora: @wizyta.Doktor.UserName</b>
+    </div>
+}
+
+<style>
+    .wizyta
+    {
+        text-align: center;
+        border: 1px solid #333;
+        margin-top: 5px;
+    }
+</style>

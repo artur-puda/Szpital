@@ -1,0 +1,60 @@
+﻿@page
+@model Szpital.Pages.Wizyty.CreateModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Zarezerwuj wizyte</h1>
+
+@if (Model.Error?.Length > 0)
+{
+    <span style="color:red;">@Model.Error</span>
+    <br />
+    <br />
+}
+
+<br />
+
+<form method="post" class="myform">
+    <div class="form-group">
+        <label for="dr">Lekarz</label>
+        <select class="form-control" name="DoktorId">
+            @foreach (var dr in Model.Doktorzy)
+            {
+                <option value="@dr.Id">@dr.UserName</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Dzień wizyty</label>
+        <input class="form-control" name="Date" type="date">
+        <label for="time">Godzina wizyty</label>
+
+        <input type="hidden" name="Time" id="time" />
+        <input class="form-control" type="time" 
+               oninput="elog('input',this);return false;"
+               onchange="elog('change',this);return false;"
+               onblur="elog('blur',this);return false;"					 
+               onfocus="elog('focus',this);return false;"
+               onkeyup="elog('keyup-'+event.keyCode,this);return false;"
+               onkeypress="elog('keypress-'+event.keyCode,this);if(event.keyCode==13){this.onchange();return false;}"
+    >
+    </div>
+
+    <button type="submit" class="btn btn-primary">Zapisz się</button>
+</form>
+
+<style>
+    .myform
+    {
+        width: 250px;
+        margin-right: 50%;
+    }
+</style>
+<script>
+    function elog(ev, object) {
+        console.log(object.id + " - " + ev + ": " + object.value);
+        document.getElementById("time").value = object.value;
+    }
+</script>

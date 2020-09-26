@@ -1,0 +1,32 @@
+﻿@page "/Register"
+@model Szpital.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    var error = TempData["ErrorMessage"] as string;
+}
+
+<h1>Rejestracja</h1>
+
+@if (error?.Length > 0)
+{
+    <span style="color:red;">@error</span>
+    <br />
+    <br />
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="usrName">Imie Nazwisko</label>
+        <input type="text" name="UserName" class="form-control" placeholder="Imie i nazwisko">
+    </div>  
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" name="Email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" name="Password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
