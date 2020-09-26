@@ -30,6 +30,33 @@ namespace Szpital.Tests
         }
 
         [Fact]
+        public async Task Nie_da_sie_utworzyc_2_uzytkownikow_na_tego_samego_emaila()
+        {
+            var context = GetFakeDatabaseContext();
+            var service = new AccountService(context, new PasswordHasher<User>());
+
+            var input = new AccountInfo
+            {
+                Email = "test@localhost",
+                Password = "123345",
+                UserName = "test5"
+            };
+
+            var result = await service.TryRegister(input);
+            Assert.True(result.Success);
+
+            input = new AccountInfo
+            {
+                Email = "test@localhost",
+                Password = "5",
+                UserName = "5"
+            };
+
+            result = await service.TryRegister(input);
+            Assert.False(result.Success);
+        }
+
+        [Fact]
         public async Task Nie_da_sie_utworzyc_uzytkownika_bez_emaila()
         {
             var context = GetFakeDatabaseContext();
