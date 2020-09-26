@@ -51,7 +51,17 @@ namespace Szpital.Services
 
             if (string.IsNullOrWhiteSpace(info.UserName))
             {
-                info.UserName = "NazwaUżytkownika";
+                return (false, "Niepoprawna nazwa użytkownika", null);
+            }
+
+            if (string.IsNullOrWhiteSpace(info.Email))
+            {
+                return (false, "Niepoprawny adres email", null);
+            }
+
+            if (string.IsNullOrWhiteSpace(info.Password))
+            {
+                return (false, "Hasło nie spełnia wymagań bezpieczeństwa", null);
             }
 
             var user = new User
